@@ -13,12 +13,16 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'indri.yeah',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        colorScheme:
+            ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple).copyWith(
+          secondary: Colors.pink.shade200,
+        ),
+        // textTheme: Typography.whiteRedmond.copyWith(title),
       ),
       home: const HomePage(),
     );
   }
 }
-
