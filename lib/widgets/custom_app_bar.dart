@@ -1,27 +1,19 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final double height;
+// class CustomAppBar extends StatefulWidget {
+//   final bool keyboard = false;
+//   const CustomAppBar({
+//     super.key,
+//     required keyboard,
+//   });
 
-  const CustomAppBar({
-    super.key,
-    required this.height,
-  });
+//   @override
+//   State<CustomAppBar> createState() => _CustomAppBarState();
+// }
 
-  @override
-  Size get preferredSize => Size.fromHeight(height);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      child: Text(
-        "indri.yeah",
-        style: TextStyle(
-          fontSize: 30,
-          color: Colors.pink.shade900,
-        ),
-      ),
-    );
-  }
-}
+// class _CustomAppBarState extends State<CustomAppBar> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return 
+//   }
+// }

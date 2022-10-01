@@ -129,22 +129,41 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.pink.shade100,
-      appBar: CustomAppBar(
-        height: 100,
-      ),
       body: SafeArea(
         child: Center(
           child: IntrinsicHeight(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Flexible(
-                  flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 5 : 1,
+                  flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 1 : 1,
                   child: Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Indri.yeah",
+                        // textAlign: MediaQuery.of(context).viewInsets.bottom == 0
+                        //     ? TextAlign.left
+                        //     : TextAlign.center,
+                        style: TextStyle(
+                          fontSize:
+                              MediaQuery.of(context).viewInsets.bottom == 0
+                                  ? 30
+                                  : 18,
+                          color: Colors.pink.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 8 : 6,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                     child: Ink(
-                      // height: (5 * MediaQuery.of(context).size.height) / 6,
                       child: Stack(
                         children: [
                           Ink(
@@ -250,11 +269,13 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Flexible(
-                  flex: 1,
+                  flex: MediaQuery.of(context).viewInsets.bottom == 0 ? 2 : 4,
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Ink(
-                      // height: (1 * MediaQuery.of(context).size.height) / 6,
+                      // height: MediaQuery.of(context).viewInsets.bottom == 0
+                      //     ? (1 * MediaQuery.of(context).size.height) / 8
+                      //     : (2 * MediaQuery.of(context).size.height) / 5,
                       child: Stack(
                         children: [
                           Ink(
