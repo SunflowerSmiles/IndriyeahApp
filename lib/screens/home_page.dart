@@ -300,49 +300,71 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   ),
                                   child: InkWell(
-                                    onTap: () => {},
+                                    onTap: () => {
+                                      if (speechInit && !micState)
+                                        {
+                                          // Speech is initialized,
+                                          micState = !micState,
+                                          _startListening()
+                                        }
+                                      else if (speechInit && micState)
+                                        {
+                                          // Speech is initialized,
+                                          micState = !micState,
+                                          _stopListening()
+                                        }
+                                    },
                                     child: Center(
-                                      child: SingleChildScrollView(
-                                        controller: _controller,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: RichText(
-                                              text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: prevText.join("\n") == ""
-                                                    ? ""
-                                                    : "${prevText.join("\n")}\n\n",
-                                                style: GoogleFonts.robotoSlab(
-                                                  textStyle: const TextStyle(
-                                                    fontSize: 24,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.black,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: SingleChildScrollView(
+                                          controller: _controller,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: RichText(
+                                                text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text: prevText.join("\n") ==
+                                                          ""
+                                                      ? ""
+                                                      : "${prevText.join("\n")}\n",
+                                                  style: GoogleFonts.robotoSlab(
+                                                    textStyle: const TextStyle(
+                                                      fontSize: 24,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Color.fromARGB(
+                                                          255, 90, 90, 90),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              TextSpan(
-                                                text: otext,
-                                                style: GoogleFonts.robotoSlab(
-                                                  textStyle: const TextStyle(
-                                                    fontSize: 24,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.black,
+                                                TextSpan(
+                                                  text: otext,
+                                                  style: GoogleFonts.robotoSlab(
+                                                    textStyle: const TextStyle(
+                                                      fontSize: 24,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Color.fromARGB(
+                                                          255, 120, 120, 120),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              TextSpan(
-                                                text: ctext,
-                                                style: GoogleFonts.robotoSlab(
-                                                  textStyle: const TextStyle(
-                                                    fontSize: 24,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.black,
+                                                TextSpan(
+                                                  text: ctext,
+                                                  style: GoogleFonts.robotoSlab(
+                                                    textStyle: const TextStyle(
+                                                      fontSize: 24,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Colors.black,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          )),
+                                              ],
+                                            )),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -353,41 +375,25 @@ class _HomePageState extends State<HomePage> {
                                   right: 0,
                                   child: Container(
                                     margin: const EdgeInsets.all(5),
-                                    padding: const EdgeInsets.all(5),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 2, 8, 2),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Colors.deepPurple,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 5),
-                                        ),
-                                      ],
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                     ),
                                     child: GestureDetector(
-                                      onTap: () => {
-                                        if (speechInit && !micState)
-                                          {
-                                            // Speech is initialized,
-                                            micState = !micState,
-                                            _startListening()
-                                          }
-                                        else if (speechInit && micState)
-                                          {
-                                            // Speech is initialized,
-                                            micState = !micState,
-                                            _stopListening()
-                                          }
-                                      },
                                       child: micState
                                           ? const Icon(
-                                              Icons.mic,
+                                              Icons.mic_none_outlined,
                                               color: Colors.white,
+                                              size: 20,
                                             )
                                           : const Icon(
-                                              Icons.mic_off_rounded,
+                                              Icons.mic_off_outlined,
                                               color: Colors.white,
+                                              size: 20,
                                             ),
                                     ),
                                   ),
