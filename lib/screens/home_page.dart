@@ -6,6 +6,8 @@ import 'package:speech_to_text/speech_recognition_result.dart' as srr;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -227,12 +229,13 @@ class _HomePageState extends State<HomePage> {
                               duration: const Duration(milliseconds: 300),
                               child: AnimatedDefaultTextStyle(
                                 duration: const Duration(milliseconds: 300),
-                                style: TextStyle(
-                                  fontSize: !_keyboardUp ? 40 : 32,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                  fontWeight: FontWeight.w900,
-                                  fontFamily: "Source Sans Pro",
+                                style: GoogleFonts.sourceSansPro(
+                                  textStyle: TextStyle(
+                                    fontSize: !_keyboardUp ? 40 : 32,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    fontWeight: FontWeight.w900,
+                                  ),
                                 ),
                                 child: const Text(
                                   "Indri.yeah",
@@ -286,7 +289,8 @@ class _HomePageState extends State<HomePage> {
                                 Ink(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: Colors.purple.shade100,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.2),
@@ -309,24 +313,32 @@ class _HomePageState extends State<HomePage> {
                                                 text: prevText.join("\n") == ""
                                                     ? ""
                                                     : "${prevText.join("\n")}\n\n",
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.blue,
+                                                style: GoogleFonts.robotoSlab(
+                                                  textStyle: const TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.black,
+                                                  ),
                                                 ),
                                               ),
                                               TextSpan(
                                                 text: otext,
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w300,
+                                                style: GoogleFonts.robotoSlab(
+                                                  textStyle: const TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.black,
+                                                  ),
                                                 ),
                                               ),
                                               TextSpan(
                                                 text: ctext,
-                                                style: const TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.black,
+                                                style: GoogleFonts.robotoSlab(
+                                                  textStyle: const TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.black,
+                                                  ),
                                                 ),
                                               ),
                                             ],
