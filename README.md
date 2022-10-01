@@ -16,4 +16,5 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 ## Problems Right Now
-1. Keyboard error
+1. Weird animation when settings drawer is opened.
+2. Unaligned title (temporary work around done)

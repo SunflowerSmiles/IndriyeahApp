@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import "package:flutter/material.dart";
-import 'package:indriyeahapp/widgets/measure_size.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:speech_to_text/speech_recognition_result.dart' as srr;
 import 'package:flutter_tts/flutter_tts.dart';
@@ -161,7 +160,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   final TextEditingController _textController = TextEditingController();
-  final GlobalKey<ScaffoldState> _key = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -177,23 +176,26 @@ class _HomePageState extends State<HomePage> {
         endDrawer: Drawer(
           child: ListView(
             children: <Widget>[
-              DrawerHeader(
+              const DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
                 child: Center(
                   child: SizedBox(
                     width: 60.0,
                     height: 60.0,
-                    child: CircleAvatar(
-                      child: FlutterLogo(),
+                    child: Text(
+                      "Settings",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
               ),
               ListTile(
-                leading: Icon(Icons.change_history),
-                title: Text('Change history'),
+                leading: const Icon(Icons.translate),
+                title: const Text('Change language'),
                 onTap: () {
                   // change app state...
                   Navigator.pop(context); // close the drawer
@@ -202,7 +204,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        key: _key,
+        key: _scaffoldKey,
         backgroundColor: Colors.pink.shade100,
         body: SafeArea(
           child: Center(
@@ -216,14 +218,14 @@ class _HomePageState extends State<HomePage> {
                     child: Padding(
                       padding: !_keyboardUp
                           ? const EdgeInsets.fromLTRB(20, 0, 10, 0)
-                          : const EdgeInsets.all(0),
+                          : const EdgeInsets.fromLTRB(20, 0, 10, 0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
                             child: AnimatedAlign(
-                              alignment: Alignment.center,
+                              alignment: !_keyboardUp
+                                  ? Alignment.centerLeft
+                                  : const Alignment(0.1, 0),
                               duration: const Duration(milliseconds: 300),
                               child: AnimatedDefaultTextStyle(
                                 duration: const Duration(milliseconds: 300),
@@ -238,14 +240,19 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                          IconButton(
-                              onPressed: () => {
-                                    _key.currentState!.openDrawer(),
-                                  },
-                              icon: Icon(
-                                Icons.menu,
-                                color: Colors.pink.shade900,
-                              ))
+                          AnimatedAlign(
+                            alignment: Alignment.center,
+                            duration: const Duration(milliseconds: 300),
+                            child: IconButton(
+                                onPressed: () => {
+                                      _scaffoldKey.currentState!
+                                          .openEndDrawer(),
+                                    },
+                                icon: Icon(
+                                  Icons.menu,
+                                  color: Colors.pink.shade900,
+                                )),
+                          )
                         ],
                       ),
                     ),
@@ -258,9 +265,6 @@ class _HomePageState extends State<HomePage> {
                         onNotification:
                             (SizeChangedLayoutNotification notification) {
                           if (_keyboardUp == true) {
-                            print("ASDASDASD");
-                            print(_realTap);
-
                             if (_realTap == false) {
                               FocusScope.of(context).unfocus();
                             } else {
