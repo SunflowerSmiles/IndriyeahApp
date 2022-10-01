@@ -1,27 +1,27 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
-// class CustomAppBar extends StatelessWidget {
-//   const CustomAppBar({super.key});
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final double height;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: 160.0,
-//       child: Stack(
-//         children: <Widget>[
-//           Container(
-//             color: Colors.deepPurple,
-//             width: MediaQuery.of(context).size.width,
-//             height: 100.0,
-//             child: const Center(
-//               child: Text(
-//                 "Home",
-//                 style: TextStyle(color: Colors.white, fontSize: 18.0),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  const CustomAppBar({
+    super.key,
+    required this.height,
+  });
+
+  @override
+  Size get preferredSize => Size.fromHeight(height);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      child: Text(
+        "indri.yeah",
+        style: TextStyle(
+          fontSize: 30,
+          color: Colors.pink.shade900,
+        ),
+      ),
+    );
+  }
+}
