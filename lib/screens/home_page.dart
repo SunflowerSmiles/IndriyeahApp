@@ -24,8 +24,6 @@ class _HomePageState extends State<HomePage> {
   String _textToSay = "";
   bool _keyboardUp = false;
 
-  bool _visible = false;
-
   final stt.SpeechToText _speechToText = stt.SpeechToText();
 
   late StreamSubscription<bool> keyboardSubscription;
@@ -205,7 +203,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         key: _scaffoldKey,
-        backgroundColor: Colors.pink.shade100,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(
           child: Center(
             child: IntrinsicHeight(
@@ -230,9 +228,11 @@ class _HomePageState extends State<HomePage> {
                               child: AnimatedDefaultTextStyle(
                                 duration: const Duration(milliseconds: 300),
                                 style: TextStyle(
-                                  fontSize: !_keyboardUp ? 30 : 18,
-                                  color: Colors.pink.shade900,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: !_keyboardUp ? 40 : 32,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: "Source Sans Pro",
                                 ),
                                 child: const Text(
                                   "Indri.yeah",
@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                               // after animation,
                               // set _realTap to false
                               // wait for animation to finish
-                              Future.delayed(const Duration(milliseconds: 500),
+                              Future.delayed(const Duration(milliseconds: 600),
                                   () {
                                 _realTap = false;
                               });
