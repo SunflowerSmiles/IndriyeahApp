@@ -284,6 +284,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         child: SizeChangedLayoutNotifier(
                           child: Ink(
+                            // TODO: make text come from bottom
                             child: Stack(
                               children: [
                                 Ink(
