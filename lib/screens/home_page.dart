@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors, sized_box_for_whitespace, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
 
@@ -9,7 +9,7 @@ import 'package:speech_to_text/speech_recognition_result.dart' as srr;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:math';
 
 import 'dart:io' show Platform;
 
@@ -222,6 +222,29 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _textController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  bool _transform = false;
+
+  void _showDialog(Widget child) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        // The Bottom margin is provided to align the popup above the system navigation bar.
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        // Provide a background color for the popup.
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        // Use a SafeArea widget to avoid system overlaps.
+        child: SafeArea(
+          top: false,
+          child: child,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -255,47 +278,14 @@ class _HomePageState extends State<HomePage> {
         //           ),
         //         ),
         //       ),
-        //       ListTile(
-        //         leading: const Icon(Icons.translate),
-        //         title: const Text('Change STT Language'),
-        //         onTap: () {
-        //           showDialog(
-        //             context: context,
-        //             builder: (context) {
-        //               return AlertDialog(
-        //                 content: Column(
-        //                   mainAxisSize: MainAxisSize.min,
-        //                   children: [
-        //                     Container(
-        //                       padding: const EdgeInsets.all(10),
-        //                       height: 300,
-        //                       width: 200,
-        //                       child: ListView.builder(
-        //                         shrinkWrap: true,
-        //                         itemCount: _locales.length,
-        //                         itemBuilder: (context, index) {
-        //                           return ListTile(
-        //                             title: Text(_locales[index].name),
-        //                             onTap: () {
-        //                               setState(
-        //                                 () {
-        //                                   _selectedLocale =
-        //                                       _locales[index].localeId;
-        //                                 },
-        //                               );
-        //                               Navigator.pop(context);
-        //                             },
-        //                           );
-        //                         },
-        //                       ),
-        //                     )
-        //                   ],
-        //                 ),
-        //               );
-        //             },
-        //           );
-        //         },
-        //       ),
+        // ListTile(
+        //   leading: const Icon(Icons.translate),
+        //   title: const Text('Change STT Language'),
+        //   onTap: () {
+
+        //     );
+        //   },
+        // ),
         //       ListTile(
         //         leading: const Icon(Icons.language),
         //         title: const Text('Change TTS Language'),
@@ -470,13 +460,38 @@ class _HomePageState extends State<HomePage> {
                           alignment: Alignment.bottomLeft,
                           child: CupertinoButton(
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(CupertinoIcons.globe),
                                 const SizedBox(width: 5),
                                 Text(_selectedLocale), // TODO: change if time
                               ],
                             ),
-                            onPressed: () => {},
+                            onPressed: () => {
+                              _showDialog(
+                                CupertinoPicker(
+                                  itemExtent: 32,
+                                  onSelectedItemChanged: (int value) {
+                                    setState(() {
+                                      _selectedLocale =
+                                          _locales[value].localeId;
+                                    });
+                                  },
+                                  children: List<Widget>.generate(
+                                    _locales.length,
+                                    (int index) {
+                                      return Center(
+                                        child: Text(
+                                          _locales[index].localeId,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            },
                           ),
                         ),
                         Padding(
@@ -656,18 +671,73 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: CupertinoButton(
-                            child: Row(
-                              children: [
-                                const Icon(CupertinoIcons.globe),
-                                const SizedBox(width: 5),
-                                Text(_selectedLocale), // TODO: change if time
-                              ],
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: CupertinoButton(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(CupertinoIcons.globe),
+                                    const SizedBox(width: 5),
+                                    Text(_setTTSlocale), // TODO: change if time
+                                  ],
+                                ),
+                                onPressed: () => {
+                                  _showDialog(
+                                    CupertinoPicker(
+                                      itemExtent: 32,
+                                      onSelectedItemChanged: (int value) {
+                                        setState(() {
+                                          _setTTSlocale = _TTSGood[value];
+                                          flutterTts.setLanguage(_setTTSlocale);
+                                        });
+                                      },
+                                      children: List<Widget>.generate(
+                                        _TTSGood.length,
+                                        (int index) {
+                                          return Center(
+                                            child: Text(
+                                              _TTSGood[index].toString(),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                },
+                              ),
                             ),
-                            onPressed: () => {},
-                          ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: CupertinoButton(
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                        CupertinoIcons.arrow_2_circlepath),
+                                    const SizedBox(width: 5),
+                                  ],
+                                ),
+                                onPressed: () => {
+                                  setState(
+                                    () {
+                                      // toggle transform
+                                      _transform = !_transform;
+                                    },
+                                  ),
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
@@ -682,7 +752,7 @@ class _HomePageState extends State<HomePage> {
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 10,
+                                  blurRadius: 0,
                                   offset: const Offset(0, 5),
                                 )
                               ],
@@ -692,51 +762,51 @@ class _HomePageState extends State<HomePage> {
                               child: Center(
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: CupertinoTextField(
-                                    focusNode: _focus,
-                                    controller: _textController,
-                                    onTap: () => {},
-                                    onChanged: (val) => {
-                                      if (val.lastIndexOf("\n") == -1)
-                                        {
-                                          // line continues
-                                          _textToSay = val,
-                                        }
-                                      else
-                                        {
-                                          // line has ended somewhere
-                                          if (val.lastIndexOf("\n") ==
-                                              val.length - 1)
-                                            {
-                                              // line just ended, speak it
-                                              _speak(_textToSay),
-                                              _textToSay = "",
-                                            }
-                                          else
-                                            {
-                                              // line
-                                              _textToSay = val.substring(
-                                                  val.lastIndexOf("\n") + 1),
-                                            }
-                                        },
-                                    },
-                                    textAlign: TextAlign.left,
-                                    style: GoogleFonts.robotoSlab(
-                                      textStyle: const TextStyle(
+                                  child: RotatedBox(
+                                    quarterTurns: _transform ? 2 : 0,
+                                    child: CupertinoTextField(
+                                      focusNode: _focus,
+                                      controller: _textController,
+                                      onTap: () => {},
+                                      onChanged: (val) => {
+                                        if (val.lastIndexOf("\n") == -1)
+                                          {
+                                            // line continues
+                                            _textToSay = val,
+                                          }
+                                        else
+                                          {
+                                            // line has ended somewhere
+                                            if (val.lastIndexOf("\n") ==
+                                                val.length - 1)
+                                              {
+                                                // line just ended, speak it
+                                                _speak(_textToSay),
+                                                _textToSay = "",
+                                              }
+                                            else
+                                              {
+                                                // line
+                                                _textToSay = val.substring(
+                                                    val.lastIndexOf("\n") + 1),
+                                              }
+                                          },
+                                      },
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
                                         fontSize: 24,
                                         color: Colors.white,
                                       ),
-                                    ),
-                                    maxLines: 100,
-                                    keyboardType: TextInputType.multiline,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.transparent,
+                                      maxLines: 100,
+                                      keyboardType: TextInputType.multiline,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.transparent,
+                                        ),
                                       ),
-                                    ),
-                                    placeholder: "Type your message here",
-                                    placeholderStyle: GoogleFonts.robotoSlab(
-                                      textStyle: const TextStyle(
+                                      // prefix: Icon(CupertinoIcons.keyboard),
+                                      placeholder: "Type here...",
+                                      placeholderStyle: TextStyle(
                                         fontSize: 24,
                                         color: Colors.white,
                                       ),
