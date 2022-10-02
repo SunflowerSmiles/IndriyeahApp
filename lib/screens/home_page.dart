@@ -8,6 +8,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
+import 'dart:io' show Platform;
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -25,10 +27,15 @@ class _HomePageState extends State<HomePage> {
   late FlutterTts flutterTts;
   String _textToSay = "";
   bool _keyboardUp = false;
+  List<stt.LocaleName> _locales = [];
+  List<dynamic> _TTSlanguages = [];
+  List<String> _TTSGood = [];
 
   final stt.SpeechToText _speechToText = stt.SpeechToText();
 
   late StreamSubscription<bool> keyboardSubscription;
+
+  String _selectedLocale = "";
 
   void _initSpeech() async {
     speechInit = await _speechToText.initialize(
@@ -52,6 +59,9 @@ class _HomePageState extends State<HomePage> {
           },
       },
     );
+    _locales = await _speechToText.locales();
+    var sysLocale = await _speechToText.systemLocale();
+    _selectedLocale = sysLocale!.localeId;
     setState(() {});
   }
 
@@ -101,21 +111,33 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future _setAwaitOptions() async {
-    await flutterTts.setIosAudioCategory(
-      IosTextToSpeechAudioCategory.playback,
-      [
-        IosTextToSpeechAudioCategoryOptions.allowBluetooth,
-        IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
-        IosTextToSpeechAudioCategoryOptions.allowAirPlay,
-        IosTextToSpeechAudioCategoryOptions.duckOthers,
-        IosTextToSpeechAudioCategoryOptions.defaultToSpeaker
-      ],
-      IosTextToSpeechAudioMode.voicePrompt,
-    );
+    // await flutterTts.setIosAudioCategory(
+    //   IosTextToSpeechAudioCategory.playback,
+    //   [
+    //     IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+    //     IosTextToSpeechAudioCategoryOptions.allowBluetoothA2DP,
+    //     IosTextToSpeechAudioCategoryOptions.allowAirPlay,
+    //     IosTextToSpeechAudioCategoryOptions.duckOthers
+    //   ],
+    //   IosTextToSpeechAudioMode.voicePrompt,
+    // );
+    _TTSlanguages = await flutterTts.getLanguages;
+    // convert _TTSlanguages to a list of strings
+
+    _TTSGood = _TTSlanguages.map((e) => e.toString()).toList();
+
+    if (Platform.isAndroid) {
+      var map = await flutterTts.areLanguagesInstalled(_TTSGood);
+
+      // edit TTS Languages to remove unsupported languages
+      _TTSGood.removeWhere((element) => !map[element]!);
+    }
+    print(_TTSGood);
+
+    await flutterTts.awaitSpeakCompletion(true);
   }
 
   Future _speak(say) async {
-    await flutterTts.setLanguage("en-US");
     await flutterTts.setVolume(1.0);
     await flutterTts.setSpeechRate(0.420);
     await flutterTts.setPitch(1.0);
@@ -129,7 +151,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _startListening() async {
-    await _speechToText.listen(onResult: _onSpeechResult);
+    await _speechToText.listen(
+        onResult: _onSpeechResult, localeId: _selectedLocale);
     setState(() {
       ctext = "";
       otext = "";
@@ -175,19 +198,22 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         endDrawer: Drawer(
           child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
             children: <Widget>[
-              const DrawerHeader(
+              DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
-                child: Center(
-                  child: SizedBox(
-                    width: 60.0,
-                    height: 60.0,
+                child: const SizedBox(
+                  width: double.infinity,
+                  height: 40.0,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       "Settings",
                       style: TextStyle(
                         color: Colors.white,
+                        fontSize: 48,
                       ),
                     ),
                   ),
@@ -195,11 +221,101 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 leading: const Icon(Icons.translate),
-                title: const Text('Change language'),
+                title: const Text('Change STT Language'),
                 onTap: () {
-                  // change app state...
-                  Navigator.pop(context); // close the drawer
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              height: 300,
+                              width: 200,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _locales.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(_locales[index].name),
+                                    onTap: () {
+                                      setState(
+                                        () {
+                                          _selectedLocale =
+                                              _locales[index].localeId;
+                                        },
+                                      );
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
                 },
+              ),
+              ListTile(
+                leading: const Icon(Icons.language),
+                title: const Text('Change TTS Language'),
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              height: 300,
+                              width: 200,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _TTSGood.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text(_TTSGood[index]),
+                                    onTap: () {
+                                      setState(
+                                        () {
+                                          flutterTts.setLanguage(
+                                            _TTSGood[index],
+                                          );
+                                        },
+                                      );
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.mic_none_outlined),
+                title: const Text('Change Voice'),
+                onTap: () {},
+              ),
+              ListTile(
+                leading: const Icon(Icons.speed_outlined),
+                title: const Text('Change Speed'),
+                onTap: () {},
+              ),
+              ListTile(
+                leading: const Icon(Icons.dark_mode_outlined),
+                title: const Text('Dark Mode'),
+                onTap: () {},
               )
             ],
           ),
