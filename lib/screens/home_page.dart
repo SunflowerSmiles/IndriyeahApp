@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> {
 
   late StreamSubscription<bool> keyboardSubscription;
 
+  String _setTTSlocale = "";
   String _selectedLocale = "";
 
   void _initSpeech() async {
@@ -68,6 +69,12 @@ class _HomePageState extends State<HomePage> {
   final FocusNode _focus = FocusNode();
 
   bool _realTap = false;
+
+  late List<dynamic> _TTSVoices;
+  late List<Map<String, String>> _TTSVoicesGood;
+  late List<Map<String, String>> _TTSVoicesGoodGood = [];
+
+  double _speechRate = 0.5;
 
   @override
   void initState() {
@@ -117,6 +124,17 @@ class _HomePageState extends State<HomePage> {
     //   ],
     //   IosTextToSpeechAudioMode.voicePrompt,
     // );
+    _TTSVoices = await flutterTts.getVoices;
+    // convert _TTSVoices to String String map
+    _TTSVoicesGood = _TTSVoices.map(
+      (e) => {
+        "name": e["name"].toString(),
+        "locale": e["locale"].toString(),
+      },
+    ).toList();
+
+    // populate TTSVOICEGOODGOOD with only the names which are current locale...
+
     _TTSlanguages = await flutterTts.getLanguages;
     // convert _TTSlanguages to a list of strings
 
@@ -128,15 +146,34 @@ class _HomePageState extends State<HomePage> {
       // edit TTS Languages to remove unsupported languages
       _TTSGood.removeWhere((element) => !map[element]!);
     }
-    print(_TTSGood);
 
+    // _lang = await flutterTts.getDefaultVoice;
+    var map = {};
+    if (Platform.isAndroid) {
+      map = await flutterTts.getDefaultVoice;
+    } else {
+      map = {"locale": "en-US"};
+    }
+    _setTTSlocale = map["locale"];
+    _oopaoopa();
+    print(_TTSVoicesGoodGood);
     await flutterTts.awaitSpeakCompletion(true);
   }
 
+  void _oopaoopa() {
+    _TTSVoicesGoodGood = [];
+    for (Map<String, String> val in _TTSVoicesGood) {
+      if (val["locale"] == _setTTSlocale) {
+        _TTSVoicesGoodGood.add(val);
+      }
+    }
+    print(_setTTSlocale);
+    print(_TTSVoicesGoodGood);
+  }
+
   Future _speak(say) async {
-    await flutterTts.setVolume(1.0);
-    await flutterTts.setSpeechRate(0.420);
-    await flutterTts.setPitch(1.0);
+    await flutterTts.setVolume(1.5);
+    await flutterTts.setSpeechRate(_speechRate);
     await flutterTts.speak(say);
   }
 
@@ -283,6 +320,8 @@ class _HomePageState extends State<HomePage> {
                                           flutterTts.setLanguage(
                                             _TTSGood[index],
                                           );
+                                          _setTTSlocale = _TTSGood[index];
+                                          _oopaoopa();
                                         },
                                       );
                                       Navigator.pop(context);
@@ -301,17 +340,84 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 leading: const Icon(Icons.mic_none_outlined),
                 title: const Text('Change Voice'),
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              height: 300,
+                              width: 200,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: _TTSVoicesGoodGood.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    title: Text("${_TTSVoicesGoodGood[index]}"),
+                                    onTap: () {
+                                      setState(
+                                        () {
+                                          flutterTts.setVoice(
+                                            _TTSVoicesGoodGood[index],
+                                          );
+                                        },
+                                      );
+                                      Navigator.pop(context);
+                                    },
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.speed_outlined),
                 title: const Text('Change Speed'),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.dark_mode_outlined),
-                title: const Text('Dark Mode'),
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              height: 300,
+                              width: 200,
+                              child: Slider(
+                                value: _speechRate,
+                                min: 0.0,
+                                max: 1.0,
+                                divisions: 10,
+                                label: _speechRate.toString(),
+                                onChanged: (value) {
+                                  setState(
+                                    () {
+                                      _speechRate = value;
+                                    },
+                                  );
+                                },
+                                onChangeEnd: (val) {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
               )
             ],
           ),
