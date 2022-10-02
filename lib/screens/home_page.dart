@@ -295,16 +295,18 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius: BorderRadius.circular(8),
                                       color:
                                           Theme.of(context).colorScheme.primary,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 5),
-                                        ),
-                                      ],
+                                      // boxShadow: [
+                                      //   BoxShadow(
+                                      //     color: Colors.black.withOpacity(0.2),
+                                      //     blurRadius: 10,
+                                      //     offset: const Offset(0, 5),
+                                      //   ),
+                                      // ],
                                     ),
                                     child: InkWell(
                                       onTap: () => {
+                                        prevText =
+                                            prevText.isEmpty ? [""] : prevText,
                                         if (speechInit && !micState)
                                           {
                                             // Speech is initialized,
@@ -320,65 +322,174 @@ class _HomePageState extends State<HomePage> {
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.all(5.0),
-                                        child: SingleChildScrollView(
-                                          controller: _controller,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: RichText(
-                                                textAlign: TextAlign.left,
-                                                text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: prevText
-                                                                  .join("\n") ==
-                                                              ""
-                                                          ? ""
-                                                          : "${prevText.join("\n")}\n",
-                                                      style: GoogleFonts
-                                                          .robotoSlab(
-                                                        textStyle:
-                                                            const TextStyle(
-                                                          fontSize: 24,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Color.fromARGB(
-                                                              255, 90, 90, 90),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: otext,
-                                                      style: GoogleFonts
-                                                          .robotoSlab(
-                                                        textStyle:
-                                                            const TextStyle(
-                                                          fontSize: 24,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Color.fromARGB(
-                                                              255,
-                                                              120,
-                                                              120,
-                                                              120),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    TextSpan(
-                                                      text: ctext,
-                                                      style: GoogleFonts
-                                                          .robotoSlab(
-                                                        textStyle:
-                                                            const TextStyle(
-                                                          fontSize: 24,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
+                                        child: LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            return SingleChildScrollView(
+                                              controller: _controller,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child:
+                                                    micState &&
+                                                            prevText.isNotEmpty
+                                                        ? RichText(
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            text: TextSpan(
+                                                              children: [
+                                                                TextSpan(
+                                                                  text: prevText
+                                                                              .join("\n") ==
+                                                                          ""
+                                                                      ? ""
+                                                                      : "${prevText.join("\n")}\n",
+                                                                  style: GoogleFonts
+                                                                      .robotoSlab(
+                                                                    textStyle:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          24,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: Color.fromARGB(
+                                                                          255,
+                                                                          90,
+                                                                          90,
+                                                                          90),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: otext,
+                                                                  style: GoogleFonts
+                                                                      .robotoSlab(
+                                                                    textStyle:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          24,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: Color.fromARGB(
+                                                                          255,
+                                                                          120,
+                                                                          120,
+                                                                          120),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                TextSpan(
+                                                                  text: ctext,
+                                                                  style: GoogleFonts
+                                                                      .robotoSlab(
+                                                                    textStyle:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          24,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : prevText.isEmpty
+                                                            ? ConstrainedBox(
+                                                                constraints: BoxConstraints(
+                                                                    minHeight:
+                                                                        constraints
+                                                                            .maxHeight),
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    "Tap to speak",
+                                                                    style: GoogleFonts
+                                                                        .robotoSlab(
+                                                                      textStyle:
+                                                                          const TextStyle(
+                                                                        fontSize:
+                                                                            24,
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
+                                                                        color: Colors
+                                                                            .black,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : RichText(
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .left,
+                                                                text: TextSpan(
+                                                                  children: [
+                                                                    TextSpan(
+                                                                      text: prevText.join("\n") ==
+                                                                              ""
+                                                                          ? ""
+                                                                          : "${prevText.join("\n")}\n",
+                                                                      style: GoogleFonts
+                                                                          .robotoSlab(
+                                                                        textStyle:
+                                                                            const TextStyle(
+                                                                          fontSize:
+                                                                              24,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              90,
+                                                                              90,
+                                                                              90),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    TextSpan(
+                                                                      text:
+                                                                          otext,
+                                                                      style: GoogleFonts
+                                                                          .robotoSlab(
+                                                                        textStyle:
+                                                                            const TextStyle(
+                                                                          fontSize:
+                                                                              24,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              120,
+                                                                              120,
+                                                                              120),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    TextSpan(
+                                                                      text:
+                                                                          ctext,
+                                                                      style: GoogleFonts
+                                                                          .robotoSlab(
+                                                                        textStyle:
+                                                                            const TextStyle(
+                                                                          fontSize:
+                                                                              24,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
+                                                                          color:
+                                                                              Colors.black,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -411,7 +522,27 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                     ),
                                   ),
-                                )
+                                ),
+                                prevText.isNotEmpty && !micState
+                                    ? Positioned(
+                                        bottom: 0,
+                                        left: 0,
+                                        child: Container(
+                                          margin: const EdgeInsets.all(5),
+                                          child: Text(
+                                            "Tap to start speaking again",
+                                            style: GoogleFonts.robotoSlab(
+                                              textStyle: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Positioned(
+                                        bottom: 0, left: 0, child: Container()),
                               ],
                             ),
                           ),
@@ -435,12 +566,13 @@ class _HomePageState extends State<HomePage> {
                                 color: Theme.of(context)
                                     .colorScheme
                                     .secondaryContainer,
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 5))
-                                ],
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //     color: Colors.black.withOpacity(0.2),
+                                //     blurRadius: 10,
+                                //     offset: const Offset(0, 5),
+                                //   )
+                                // ],
                               ),
                               child: InkWell(
                                 onTap: () => {},
