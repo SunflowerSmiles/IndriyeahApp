@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:indriyeahapp/screens/home_page.dart';
 
@@ -11,12 +12,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    Brightness pltformBrightness = Brightness.light;
+    return CupertinoApp(
+      builder: (BuildContext context, Widget? child) {
+        pltformBrightness = MediaQuery.of(context).platformBrightness;
+        return child!;
+      },
       debugShowCheckedModeBanner: false,
-      title: 'indri.yeah',
-      theme: ThemeData(),
-      darkTheme: ThemeData.dark(),
-      themeMode: ThemeMode.system,
+      title: 'Indri.yeah',
+      theme: CupertinoThemeData(brightness: pltformBrightness),
       home: const HomePage(),
     );
   }

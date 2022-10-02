@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:speech_to_text/speech_recognition_result.dart' as srr;
@@ -28,7 +29,9 @@ class _HomePageState extends State<HomePage> {
   String _textToSay = "";
   bool _keyboardUp = false;
   List<stt.LocaleName> _locales = [];
+  // ignore: non_constant_identifier_names
   List<dynamic> _TTSlanguages = [];
+  // ignore: non_constant_identifier_names
   List<String> _TTSGood = [];
 
   final stt.SpeechToText _speechToText = stt.SpeechToText();
@@ -68,10 +71,11 @@ class _HomePageState extends State<HomePage> {
 
   final FocusNode _focus = FocusNode();
 
-  bool _realTap = false;
-
+  // ignore: non_constant_identifier_names
   late List<dynamic> _TTSVoices;
+  // ignore: non_constant_identifier_names
   late List<Map<String, String>> _TTSVoicesGood;
+  // ignore: non_constant_identifier_names
   late List<Map<String, String>> _TTSVoicesGoodGood = [];
 
   double _speechRate = 0.5;
@@ -156,7 +160,6 @@ class _HomePageState extends State<HomePage> {
     }
     _setTTSlocale = map["locale"];
     _oopaoopa();
-    print(_TTSVoicesGoodGood);
     await flutterTts.awaitSpeakCompletion(true);
   }
 
@@ -167,8 +170,6 @@ class _HomePageState extends State<HomePage> {
         _TTSVoicesGoodGood.add(val);
       }
     }
-    print(_setTTSlocale);
-    print(_TTSVoicesGoodGood);
   }
 
   Future _speak(say) async {
@@ -225,640 +226,692 @@ class _HomePageState extends State<HomePage> {
         if (_keyboardUp == true)
           {
             FocusScope.of(context).unfocus(),
-            _realTap = true,
           }
       },
-      child: Scaffold(
-        endDrawer: Drawer(
-          child: ListView(
-            physics: const NeverScrollableScrollPhysics(),
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                child: const SizedBox(
-                  width: double.infinity,
-                  height: 40.0,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Settings",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 48,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.translate),
-                title: const Text('Change STT Language'),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              height: 300,
-                              width: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _locales.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: Text(_locales[index].name),
-                                    onTap: () {
-                                      setState(
-                                        () {
-                                          _selectedLocale =
-                                              _locales[index].localeId;
-                                        },
-                                      );
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.language),
-                title: const Text('Change TTS Language'),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              height: 300,
-                              width: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _TTSGood.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: Text(_TTSGood[index]),
-                                    onTap: () {
-                                      setState(
-                                        () {
-                                          flutterTts.setLanguage(
-                                            _TTSGood[index],
-                                          );
-                                          _setTTSlocale = _TTSGood[index];
-                                          _oopaoopa();
-                                        },
-                                      );
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.mic_none_outlined),
-                title: const Text('Change Voice'),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              height: 300,
-                              width: 200,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: _TTSVoicesGoodGood.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    title: Text("${_TTSVoicesGoodGood[index]}"),
-                                    onTap: () {
-                                      setState(
-                                        () {
-                                          flutterTts.setVoice(
-                                            _TTSVoicesGoodGood[index],
-                                          );
-                                        },
-                                      );
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.speed_outlined),
-                title: const Text('Change Speed'),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              height: 300,
-                              width: 200,
-                              child: Slider(
-                                value: _speechRate,
-                                min: 0.0,
-                                max: 1.0,
-                                divisions: 10,
-                                label: _speechRate.toString(),
-                                onChanged: (value) {
-                                  setState(
-                                    () {
-                                      _speechRate = value;
-                                    },
-                                  );
-                                },
-                                onChangeEnd: (val) {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-              )
-            ],
-          ),
+      child: CupertinoPageScaffold(
+        // endDrawer: Drawer(
+        //   child: ListView(
+        //     physics: const NeverScrollableScrollPhysics(),
+        //     children: <Widget>[
+        //       DrawerHeader(
+        //         decoration: BoxDecoration(
+        //           color: Theme.of(context).colorScheme.secondary,
+        //         ),
+        //         child: const SizedBox(
+        //           width: double.infinity,
+        //           height: 40.0,
+        //           child: Align(
+        //             alignment: Alignment.centerLeft,
+        //             child: Text(
+        //               "Settings",
+        //               style: TextStyle(
+        //                 color: Colors.white,
+        //                 fontSize: 48,
+        //               ),
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //       ListTile(
+        //         leading: const Icon(Icons.translate),
+        //         title: const Text('Change STT Language'),
+        //         onTap: () {
+        //           showDialog(
+        //             context: context,
+        //             builder: (context) {
+        //               return AlertDialog(
+        //                 content: Column(
+        //                   mainAxisSize: MainAxisSize.min,
+        //                   children: [
+        //                     Container(
+        //                       padding: const EdgeInsets.all(10),
+        //                       height: 300,
+        //                       width: 200,
+        //                       child: ListView.builder(
+        //                         shrinkWrap: true,
+        //                         itemCount: _locales.length,
+        //                         itemBuilder: (context, index) {
+        //                           return ListTile(
+        //                             title: Text(_locales[index].name),
+        //                             onTap: () {
+        //                               setState(
+        //                                 () {
+        //                                   _selectedLocale =
+        //                                       _locales[index].localeId;
+        //                                 },
+        //                               );
+        //                               Navigator.pop(context);
+        //                             },
+        //                           );
+        //                         },
+        //                       ),
+        //                     )
+        //                   ],
+        //                 ),
+        //               );
+        //             },
+        //           );
+        //         },
+        //       ),
+        //       ListTile(
+        //         leading: const Icon(Icons.language),
+        //         title: const Text('Change TTS Language'),
+        //         onTap: () {
+        //           showDialog(
+        //             context: context,
+        //             builder: (context) {
+        //               return AlertDialog(
+        //                 content: Column(
+        //                   mainAxisSize: MainAxisSize.min,
+        //                   children: [
+        //                     Container(
+        //                       padding: const EdgeInsets.all(10),
+        //                       height: 300,
+        //                       width: 200,
+        //                       child: ListView.builder(
+        //                         shrinkWrap: true,
+        //                         itemCount: _TTSGood.length,
+        //                         itemBuilder: (context, index) {
+        //                           return ListTile(
+        //                             title: Text(_TTSGood[index]),
+        //                             onTap: () {
+        //                               setState(
+        //                                 () {
+        //                                   flutterTts.setLanguage(
+        //                                     _TTSGood[index],
+        //                                   );
+        //                                   _setTTSlocale = _TTSGood[index];
+        //                                   _oopaoopa();
+        //                                 },
+        //                               );
+        //                               Navigator.pop(context);
+        //                             },
+        //                           );
+        //                         },
+        //                       ),
+        //                     )
+        //                   ],
+        //                 ),
+        //               );
+        //             },
+        //           );
+        //         },
+        //       ),
+        //       ListTile(
+        //         leading: const Icon(Icons.mic_none_outlined),
+        //         title: const Text('Change Voice'),
+        //         onTap: () {
+        //           showDialog(
+        //             context: context,
+        //             builder: (context) {
+        //               return AlertDialog(
+        //                 content: Column(
+        //                   mainAxisSize: MainAxisSize.min,
+        //                   children: [
+        //                     Container(
+        //                       padding: const EdgeInsets.all(10),
+        //                       height: 300,
+        //                       width: 200,
+        //                       child: ListView.builder(
+        //                         shrinkWrap: true,
+        //                         itemCount: _TTSVoicesGoodGood.length,
+        //                         itemBuilder: (context, index) {
+        //                           return ListTile(
+        //                             title: Text("${_TTSVoicesGoodGood[index]}"),
+        //                             onTap: () {
+        //                               setState(
+        //                                 () {
+        //                                   flutterTts.setVoice(
+        //                                     _TTSVoicesGoodGood[index],
+        //                                   );
+        //                                 },
+        //                               );
+        //                               Navigator.pop(context);
+        //                             },
+        //                           );
+        //                         },
+        //                       ),
+        //                     )
+        //                   ],
+        //                 ),
+        //               );
+        //             },
+        //           );
+        //         },
+        //       ),
+        //       ListTile(
+        //         leading: const Icon(Icons.speed_outlined),
+        //         title: const Text('Change Speed'),
+        //         onTap: () {
+        //           showDialog(
+        //             context: context,
+        //             builder: (context) {
+        //               return AlertDialog(
+        //                 content: Column(
+        //                   mainAxisSize: MainAxisSize.min,
+        //                   children: [
+        //                     Container(
+        //                       padding: const EdgeInsets.all(10),
+        //                       height: 300,
+        //                       width: 200,
+        //                       child: Slider(
+        //                         value: _speechRate,
+        //                         min: 0.0,
+        //                         max: 1.0,
+        //                         divisions: 10,
+        //                         label: _speechRate.toString(),
+        //                         onChanged: (value) {
+        //                           setState(
+        //                             () {
+        //                               _speechRate = value;
+        //                             },
+        //                           );
+        //                         },
+        //                         onChangeEnd: (val) {
+        //                           Navigator.pop(context);
+        //                         },
+        //                       ),
+        //                     )
+        //                   ],
+        //                 ),
+        //               );
+        //             },
+        //           );
+        //         },
+        //       )
+        //     ],
+        //   ),
+        // ),
+        // key: _scaffoldKey,
+        backgroundColor: const CupertinoDynamicColor.withBrightness(
+          color: Colors.white,
+          darkColor: Colors.black54,
         ),
-        key: _scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          child: Center(
-            child: IntrinsicHeight(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Flexible(
-                    flex: !_keyboardUp ? 1 : 1,
-                    child: Padding(
-                      padding: !_keyboardUp
-                          ? const EdgeInsets.fromLTRB(20, 0, 10, 0)
-                          : const EdgeInsets.fromLTRB(20, 0, 10, 0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: AnimatedAlign(
-                              alignment: !_keyboardUp
-                                  ? Alignment.centerLeft
-                                  : const Alignment(0.1, 0),
-                              duration: const Duration(milliseconds: 300),
-                              child: AnimatedDefaultTextStyle(
-                                duration: const Duration(milliseconds: 300),
-                                style: GoogleFonts.sourceSansPro(
-                                  textStyle: TextStyle(
-                                    fontSize: !_keyboardUp ? 40 : 32,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                                ),
-                                child: const Text(
-                                  "Indri.yeah",
-                                ),
-                              ),
-                            ),
-                          ),
-                          AnimatedAlign(
-                            alignment: Alignment.center,
-                            duration: const Duration(milliseconds: 300),
-                            child: IconButton(
-                                onPressed: () => {
-                                      _scaffoldKey.currentState!
-                                          .openEndDrawer(),
-                                    },
-                                icon: Icon(
-                                  Icons.menu,
-                                  color: Colors.pink.shade900,
-                                )),
-                          )
-                        ],
-                      ),
-                    ),
+        child: SafeArea(
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            controller: _controller,
+            slivers: [
+              const CupertinoSliverNavigationBar(
+                backgroundColor: CupertinoDynamicColor.withBrightness(
+                  color: Color.fromARGB(255, 229, 229, 234),
+                  darkColor: Colors.black54,
+                ),
+                largeTitle: Text(
+                  'indri.yeah',
+                  style: TextStyle(
+                    color: CupertinoDynamicColor.withBrightness(
+                        color: Color.fromARGB(255, 28, 28, 38),
+                        darkColor: Colors.white),
                   ),
-                  Flexible(
-                    flex: !_keyboardUp ? 8 : 6,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                      child: Ink(
-                        // TODO: make text come from bottom
-                        child: Stack(
-                          children: [
-                            Positioned.fill(
-                              top: 0,
-                              left: 0,
-                              child: Ink(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Theme.of(context).colorScheme.primary,
-                                  // boxShadow: [
-                                  //   BoxShadow(
-                                  //     color: Colors.black.withOpacity(0.2),
-                                  //     blurRadius: 10,
-                                  //     offset: const Offset(0, 5),
-                                  //   ),
-                                  // ],
-                                ),
-                                child: InkWell(
-                                  onTap: () => {
-                                    prevText =
-                                        prevText.isEmpty ? [""] : prevText,
-                                    if (speechInit && !micState)
-                                      {
-                                        // Speech is initialized,
-                                        micState = !micState,
-                                        _startListening()
-                                      }
-                                    else if (speechInit && micState)
-                                      {
-                                        // Speech is initialized,
-                                        micState = !micState,
-                                        _stopListening()
-                                      }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        return SingleChildScrollView(
-                                          controller: _controller,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: micState &&
-                                                    prevText.isNotEmpty
-                                                ? RichText(
-                                                    textAlign: TextAlign.left,
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: prevText.join(
-                                                                      "\n") ==
-                                                                  ""
-                                                              ? ""
-                                                              : "${prevText.join("\n")}\n",
-                                                          style: GoogleFonts
-                                                              .robotoSlab(
-                                                            textStyle:
-                                                                const TextStyle(
-                                                              fontSize: 24,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      90,
-                                                                      90,
-                                                                      90),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        TextSpan(
-                                                          text: otext,
-                                                          style: GoogleFonts
-                                                              .robotoSlab(
-                                                            textStyle:
-                                                                const TextStyle(
-                                                              fontSize: 24,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      120,
-                                                                      120,
-                                                                      120),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        TextSpan(
-                                                          text: ctext,
-                                                          style: GoogleFonts
-                                                              .robotoSlab(
-                                                            textStyle:
-                                                                const TextStyle(
-                                                              fontSize: 24,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : prevText.isEmpty
-                                                    ? ConstrainedBox(
-                                                        constraints: BoxConstraints(
-                                                            minHeight:
-                                                                constraints
-                                                                    .maxHeight),
-                                                        child: Center(
-                                                          child: Text(
-                                                            "Tap to speak",
-                                                            style: GoogleFonts
-                                                                .robotoSlab(
-                                                              textStyle:
-                                                                  const TextStyle(
-                                                                fontSize: 24,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: Colors
-                                                                    .black,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : RichText(
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                              text: prevText.join(
-                                                                          "\n") ==
-                                                                      ""
-                                                                  ? ""
-                                                                  : "${prevText.join("\n")}\n",
-                                                              style: GoogleFonts
-                                                                  .robotoSlab(
-                                                                textStyle:
-                                                                    const TextStyle(
-                                                                  fontSize: 24,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          90,
-                                                                          90,
-                                                                          90),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text: otext,
-                                                              style: GoogleFonts
-                                                                  .robotoSlab(
-                                                                textStyle:
-                                                                    const TextStyle(
-                                                                  fontSize: 24,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          120,
-                                                                          120,
-                                                                          120),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            TextSpan(
-                                                              text: ctext,
-                                                              style: GoogleFonts
-                                                                  .robotoSlab(
-                                                                textStyle:
-                                                                    const TextStyle(
-                                                                  fontSize: 24,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                margin: const EdgeInsets.all(5),
-                                padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                                child: GestureDetector(
-                                  child: micState
-                                      ? const Icon(
-                                          Icons.mic_none_outlined,
-                                          color: Colors.white,
-                                          size: 20,
-                                        )
-                                      : const Icon(
-                                          Icons.mic_off_outlined,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                ),
-                              ),
-                            ),
-                            prevText.isNotEmpty && !micState
-                                ? Positioned(
-                                    bottom: 0,
-                                    left: 0,
-                                    child: Container(
-                                      margin: const EdgeInsets.all(5),
-                                      child: Text(
-                                        "Tap to start speaking again",
-                                        style: GoogleFonts.robotoSlab(
-                                          textStyle: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Positioned(
-                                    bottom: 0, left: 0, child: Container()),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: !_keyboardUp ? 2 : 4,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Ink(
-                        // height: _keyboardUp
-                        //     ? (1 * MediaQuery.of(context).size.height) / 8
-                        //     : (2 * MediaQuery.of(context).size.height) / 5,
-                        child: Stack(
-                          children: [
-                            Ink(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer,
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //     color: Colors.black.withOpacity(0.2),
-                                //     blurRadius: 10,
-                                //     offset: const Offset(0, 5),
-                                //   )
-                                // ],
-                              ),
-                              child: InkWell(
-                                onTap: () => {},
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      focusNode: _focus,
-                                      controller: _textController,
-                                      onTap: () => {
-                                        setState(() {
-                                          _realTap = true;
-                                        })
-                                      },
-                                      onChanged: (val) => {
-                                        if (val.lastIndexOf("\n") == -1)
-                                          {
-                                            // line continues
-                                            _textToSay = val,
-                                          }
-                                        else
-                                          {
-                                            // line has ended somewhere
-                                            if (val.lastIndexOf("\n") ==
-                                                val.length - 1)
-                                              {
-                                                // line just ended, speak it
-                                                _speak(_textToSay),
-                                                _textToSay = "",
-                                              }
-                                            else
-                                              {
-                                                // line
-                                                _textToSay = val.substring(
-                                                    val.lastIndexOf("\n") + 1),
-                                              }
-                                          },
-                                      },
-                                      textAlign: TextAlign.left,
-                                      style: GoogleFonts.robotoSlab(
-                                        textStyle: const TextStyle(
-                                          fontSize: 24,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      maxLines: 100,
-                                      keyboardType: TextInputType.multiline,
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: "Type your message here",
-                                        hintStyle: GoogleFonts.robotoSlab(
-                                          textStyle: const TextStyle(
-                                            fontSize: 24,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                margin: const EdgeInsets.all(5),
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: Colors.green,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 5),
-                                    ),
-                                  ],
-                                ),
-                                child: GestureDetector(
-                                  onTap: () => {},
-                                  child: const Icon(
-                                    Icons.autorenew,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
+                trailing: Icon(
+                  CupertinoIcons.book_fill,
+                  color: CupertinoDynamicColor.withBrightness(
+                      color: Color.fromARGB(255, 175, 82, 222),
+                      darkColor: Colors.white),
+                ),
               ),
-            ),
+              SliverFillRemaining(
+                child: MaterialButton(
+                  child: const Text("Text"),
+                  onPressed: () {
+                    _controller.animateTo(100,
+                        duration: const Duration(milliseconds: 200),
+                        curve: Curves.linear);
+                  },
+                ),
+                // child: Column(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   crossAxisAlignment: CrossAxisAlignment.stretch,
+                //   children: [
+                //     Padding(
+                //       padding: !_keyboardUp
+                //           ? const EdgeInsets.fromLTRB(20, 10, 20, 10)
+                //           : const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                //       child: Column(
+                //         children: [
+                //           AnimatedAlign(
+                //             alignment: Alignment.topRight,
+                //             duration: const Duration(milliseconds: 300),
+                //             child: IconButton(
+                //                 onPressed: () => {
+                //                       _scaffoldKey.currentState!
+                //                           .openEndDrawer(),
+                //                     },
+                //                 icon: Icon(
+                //                   CupertinoIcons.book_fill,
+                //                   color:
+                //                       Theme.of(context).colorScheme.secondary,
+                //                   size: 26,
+                //                 )),
+                //           ),
+                //           Expanded(
+                //             child: AnimatedAlign(
+                //               alignment: !_keyboardUp
+                //                   ? Alignment.bottomLeft
+                //                   : Alignment.center,
+                //               duration: const Duration(milliseconds: 300),
+                //               child: AnimatedDefaultTextStyle(
+                //                 duration: const Duration(milliseconds: 300),
+                //                 style: GoogleFonts.sourceSansPro(
+                //                   textStyle: TextStyle(
+                //                     fontSize: !_keyboardUp ? 36 : 24,
+                //                     color:
+                //                         Theme.of(context).colorScheme.onPrimary,
+                //                     fontWeight: FontWeight.w900,
+                //                   ),
+                //                 ),
+                //                 child: const Text(
+                //                   "Indri.yeah",
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                // Container(
+                //   height: 500,
+                //   width: 500,
+                //   child: Column(
+                //     children: [
+                //       Flexible(
+                //         flex: !_keyboardUp ? 8 : 6,
+                //         child: Padding(
+                //           padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                //           child: Ink(
+                //             child: Stack(
+                //               children: [
+                //                 Positioned.fill(
+                //                   top: 0,
+                //                   left: 0,
+                //                   child: Ink(
+                //                     decoration: BoxDecoration(
+                //                       borderRadius: BorderRadius.circular(8),
+                //                       color: Theme.of(context)
+                //                           .colorScheme
+                //                           .primary,
+                //                       // boxShadow: [
+                //                       //   BoxShadow(
+                //                       //     color: Colors.black.withOpacity(0.2),
+                //                       //     blurRadius: 10,
+                //                       //     offset: const Offset(0, 5),
+                //                       //   ),
+                //                       // ],
+                //                     ),
+                //                     child: InkWell(
+                //                       onTap: () => {
+                //                         prevText = prevText.isEmpty
+                //                             ? [""]
+                //                             : prevText,
+                //                         if (speechInit && !micState)
+                //                           {
+                //                             // Speech is initialized,
+                //                             micState = !micState,
+                //                             _startListening()
+                //                           }
+                //                         else if (speechInit && micState)
+                //                           {
+                //                             // Speech is initialized,
+                //                             micState = !micState,
+                //                             _stopListening()
+                //                           }
+                //                       },
+                //                       child: Padding(
+                //                         padding: const EdgeInsets.all(5.0),
+                //                         child: LayoutBuilder(
+                //                           builder: (context, constraints) {
+                //                             return SingleChildScrollView(
+                //                               controller: _controller,
+                //                               child: Padding(
+                //                                 padding:
+                //                                     const EdgeInsets.all(8.0),
+                //                                 child:
+                //                                     micState &&
+                //                                             prevText
+                //                                                 .isNotEmpty
+                //                                         ? RichText(
+                //                                             textAlign:
+                //                                                 TextAlign
+                //                                                     .left,
+                //                                             text: TextSpan(
+                //                                               children: [
+                //                                                 TextSpan(
+                //                                                   text: prevText.join("\n") ==
+                //                                                           ""
+                //                                                       ? ""
+                //                                                       : "${prevText.join("\n")}\n",
+                //                                                   style: GoogleFonts
+                //                                                       .robotoSlab(
+                //                                                     textStyle:
+                //                                                         const TextStyle(
+                //                                                       fontSize:
+                //                                                           24,
+                //                                                       fontWeight:
+                //                                                           FontWeight.w400,
+                //                                                       color: Color.fromARGB(
+                //                                                           255,
+                //                                                           90,
+                //                                                           90,
+                //                                                           90),
+                //                                                     ),
+                //                                                   ),
+                //                                                 ),
+                //                                                 TextSpan(
+                //                                                   text: otext,
+                //                                                   style: GoogleFonts
+                //                                                       .robotoSlab(
+                //                                                     textStyle:
+                //                                                         const TextStyle(
+                //                                                       fontSize:
+                //                                                           24,
+                //                                                       fontWeight:
+                //                                                           FontWeight.w400,
+                //                                                       color: Color.fromARGB(
+                //                                                           255,
+                //                                                           120,
+                //                                                           120,
+                //                                                           120),
+                //                                                     ),
+                //                                                   ),
+                //                                                 ),
+                //                                                 TextSpan(
+                //                                                   text: ctext,
+                //                                                   style: GoogleFonts
+                //                                                       .robotoSlab(
+                //                                                     textStyle:
+                //                                                         const TextStyle(
+                //                                                       fontSize:
+                //                                                           24,
+                //                                                       fontWeight:
+                //                                                           FontWeight.w400,
+                //                                                       color: Colors
+                //                                                           .black,
+                //                                                     ),
+                //                                                   ),
+                //                                                 ),
+                //                                               ],
+                //                                             ),
+                //                                           )
+                //                                         : prevText.isEmpty
+                //                                             ? ConstrainedBox(
+                //                                                 constraints: BoxConstraints(
+                //                                                     minHeight:
+                //                                                         constraints
+                //                                                             .maxHeight),
+                //                                                 child: Center(
+                //                                                   child: Text(
+                //                                                     "Tap to speak",
+                //                                                     style: GoogleFonts
+                //                                                         .robotoSlab(
+                //                                                       textStyle:
+                //                                                           const TextStyle(
+                //                                                         fontSize:
+                //                                                             24,
+                //                                                         fontWeight:
+                //                                                             FontWeight.w400,
+                //                                                         color:
+                //                                                             Colors.black,
+                //                                                       ),
+                //                                                     ),
+                //                                                   ),
+                //                                                 ),
+                //                                               )
+                //                                             : RichText(
+                //                                                 textAlign:
+                //                                                     TextAlign
+                //                                                         .left,
+                //                                                 text:
+                //                                                     TextSpan(
+                //                                                   children: [
+                //                                                     TextSpan(
+                //                                                       text: prevText.join("\n") ==
+                //                                                               ""
+                //                                                           ? ""
+                //                                                           : "${prevText.join("\n")}\n",
+                //                                                       style: GoogleFonts
+                //                                                           .robotoSlab(
+                //                                                         textStyle:
+                //                                                             const TextStyle(
+                //                                                           fontSize:
+                //                                                               24,
+                //                                                           fontWeight:
+                //                                                               FontWeight.w400,
+                //                                                           color: Color.fromARGB(
+                //                                                               255,
+                //                                                               90,
+                //                                                               90,
+                //                                                               90),
+                //                                                         ),
+                //                                                       ),
+                //                                                     ),
+                //                                                     TextSpan(
+                //                                                       text:
+                //                                                           otext,
+                //                                                       style: GoogleFonts
+                //                                                           .robotoSlab(
+                //                                                         textStyle:
+                //                                                             const TextStyle(
+                //                                                           fontSize:
+                //                                                               24,
+                //                                                           fontWeight:
+                //                                                               FontWeight.w400,
+                //                                                           color: Color.fromARGB(
+                //                                                               255,
+                //                                                               120,
+                //                                                               120,
+                //                                                               120),
+                //                                                         ),
+                //                                                       ),
+                //                                                     ),
+                //                                                     TextSpan(
+                //                                                       text:
+                //                                                           ctext,
+                //                                                       style: GoogleFonts
+                //                                                           .robotoSlab(
+                //                                                         textStyle:
+                //                                                             const TextStyle(
+                //                                                           fontSize:
+                //                                                               24,
+                //                                                           fontWeight:
+                //                                                               FontWeight.w400,
+                //                                                           color:
+                //                                                               Colors.black,
+                //                                                         ),
+                //                                                       ),
+                //                                                     ),
+                //                                                   ],
+                //                                                 ),
+                //                                               ),
+                //                               ),
+                //                             );
+                //                           },
+                //                         ),
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ),
+                //                 Positioned(
+                //                   bottom: 0,
+                //                   right: 0,
+                //                   child: Container(
+                //                     margin: const EdgeInsets.all(5),
+                //                     padding:
+                //                         const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                //                     decoration: BoxDecoration(
+                //                       borderRadius: BorderRadius.circular(20),
+                //                       color: Theme.of(context)
+                //                           .colorScheme
+                //                           .secondary,
+                //                     ),
+                //                     child: GestureDetector(
+                //                       child: micState
+                //                           ? const Icon(
+                //                               Icons.mic_none_outlined,
+                //                               color: Colors.white,
+                //                               size: 20,
+                //                             )
+                //                           : const Icon(
+                //                               Icons.mic_off_outlined,
+                //                               color: Colors.white,
+                //                               size: 20,
+                //                             ),
+                //                     ),
+                //                   ),
+                //                 ),
+                //                 prevText.isNotEmpty && !micState
+                //                     ? Positioned(
+                //                         bottom: 0,
+                //                         left: 0,
+                //                         child: Container(
+                //                           margin: const EdgeInsets.all(5),
+                //                           child: Text(
+                //                             "Tap to start speaking again",
+                //                             style: GoogleFonts.robotoSlab(
+                //                               textStyle: const TextStyle(
+                //                                 fontSize: 14,
+                //                                 fontWeight: FontWeight.w400,
+                //                                 color: Colors.black,
+                //                               ),
+                //                             ),
+                //                           ),
+                //                         ),
+                //                       )
+                //                     : Positioned(
+                //                         bottom: 0,
+                //                         left: 0,
+                //                         child: Container()),
+                //               ],
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //       Flexible(
+                //         flex: !_keyboardUp ? 2 : 4,
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(20),
+                //           child: Ink(
+                //             // height: _keyboardUp
+                //             //     ? (1 * MediaQuery.of(context).size.height) / 8
+                //             //     : (2 * MediaQuery.of(context).size.height) / 5,
+                //             child: Stack(
+                //               children: [
+                //                 Ink(
+                //                   decoration: BoxDecoration(
+                //                     borderRadius: BorderRadius.circular(8),
+                //                     color: Theme.of(context)
+                //                         .colorScheme
+                //                         .secondaryContainer,
+                //                     // boxShadow: [
+                //                     //   BoxShadow(
+                //                     //     color: Colors.black.withOpacity(0.2),
+                //                     //     blurRadius: 10,
+                //                     //     offset: const Offset(0, 5),
+                //                     //   )
+                //                     // ],
+                //                   ),
+                //                   child: InkWell(
+                //                     onTap: () => {},
+                //                     child: Center(
+                //                       child: Padding(
+                //                         padding: const EdgeInsets.all(8.0),
+                //                         child: TextField(
+                //                           focusNode: _focus,
+                //                           controller: _textController,
+                //                           onTap: () => {},
+                //                           onChanged: (val) => {
+                //                             if (val.lastIndexOf("\n") == -1)
+                //                               {
+                //                                 // line continues
+                //                                 _textToSay = val,
+                //                               }
+                //                             else
+                //                               {
+                //                                 // line has ended somewhere
+                //                                 if (val.lastIndexOf("\n") ==
+                //                                     val.length - 1)
+                //                                   {
+                //                                     // line just ended, speak it
+                //                                     _speak(_textToSay),
+                //                                     _textToSay = "",
+                //                                   }
+                //                                 else
+                //                                   {
+                //                                     // line
+                //                                     _textToSay =
+                //                                         val.substring(
+                //                                             val.lastIndexOf(
+                //                                                     "\n") +
+                //                                                 1),
+                //                                   }
+                //                               },
+                //                           },
+                //                           textAlign: TextAlign.left,
+                //                           style: GoogleFonts.robotoSlab(
+                //                             textStyle: const TextStyle(
+                //                               fontSize: 24,
+                //                               color: Colors.white,
+                //                             ),
+                //                           ),
+                //                           maxLines: 100,
+                //                           keyboardType:
+                //                               TextInputType.multiline,
+                //                           decoration: InputDecoration(
+                //                             border: InputBorder.none,
+                //                             hintText:
+                //                                 "Type your message here",
+                //                             hintStyle: GoogleFonts.robotoSlab(
+                //                               textStyle: const TextStyle(
+                //                                 fontSize: 24,
+                //                                 color: Colors.white,
+                //                               ),
+                //                             ),
+                //                           ),
+                //                         ),
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 ),
+                //                 Positioned(
+                //                   bottom: 0,
+                //                   right: 0,
+                //                   child: Container(
+                //                     margin: const EdgeInsets.all(5),
+                //                     padding: const EdgeInsets.all(5),
+                //                     decoration: BoxDecoration(
+                //                       borderRadius: BorderRadius.circular(30),
+                //                       color: Colors.green,
+                //                       boxShadow: [
+                //                         BoxShadow(
+                //                           color:
+                //                               Colors.black.withOpacity(0.2),
+                //                           blurRadius: 10,
+                //                           offset: const Offset(0, 5),
+                //                         ),
+                //                       ],
+                //                     ),
+                //                     child: GestureDetector(
+                //                       onTap: () => {},
+                //                       child: const Icon(
+                //                         Icons.autorenew,
+                //                         color: Colors.white,
+                //                       ),
+                //                     ),
+                //                   ),
+                //                 )
+                //               ],
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                //   ],
+                // ),
+              ),
+            ],
           ),
         ),
       ),
